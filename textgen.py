@@ -1,6 +1,7 @@
 import argparse
 import csv as _csv
 import json as _json
+import click
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -54,18 +55,16 @@ def createDataLoader(loader_str, filename):
         raise
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--template", "-t", default="template.txt", help="template name")
-    parser.add_argument("--file", "-f", default="data.csv", help="data file")
-    parser.add_argument("--format", default="csv", help="data format")
-    parser.add_argument("--onefile", action="store_true", help="data format")
-    args = parser.parse_args()
+@click.command()
+@click.option("--template", "-t", default="template.txt", help="template name")
+@click.option("--datafile", "-f", default="data.csv", help="data file")
+@click.option("--dataformat", default="csv", help="data format")
+@click.option("--onefile", is_flag=True, help="data format")
+def main(template, datafile, dataformat, onefile):
+    template = TemplateEngine(template)
+    loader = createDataLoader(dataformat, datafile)
 
-    template = TemplateEngine(args.template)
-    loader = createDataLoader(args.format, args.file)
-
-    if args.onefile:
+    if onefile:
         with open("output.txt", "w", encoding="utf-8") as f:
             f.write(template.render({"data": loader}))
     else:

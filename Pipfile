@@ -8,10 +8,12 @@ name = "pypi"
 [packages]
 
 "jinja2" = "*"
+click = "*"
 
 
 [dev-packages]
 
+pytest = "*"
 
 
 [requires]
